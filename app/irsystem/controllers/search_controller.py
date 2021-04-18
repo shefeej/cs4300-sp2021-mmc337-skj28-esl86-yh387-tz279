@@ -16,6 +16,8 @@ import sys
 assert sys.version_info.major == 3
 from nltk.corpus import stopwords 
 
+import time
+
 project_name = "Curator"
 net_id = "Madeleine Chang: mmc337, Shefali Janorkar: skj28, Esther Lee: esl86, Yvette Hung: yh387, Tiffany Zhong: tz279"
 
@@ -92,12 +94,11 @@ def build_museum_sims_cos(num_museums, input_doc_mat, index_to_museum=index_to_m
 @irsystem.route('/', methods=['GET'])
 def search():
 	query = request.args.get('search')
+	startsec = time.time()
 	if not query:
 		data = []
 		output_message = ''
 	else:
-		output_message = "Your search: " + query
-
 		tok_query = tokenize(query)
 		
 		l = len(museum_info)
@@ -189,6 +190,12 @@ def search():
 		del museum_info[query]
 		del museum_to_index[query]
 		del index_to_museum[l]
+	endsec = time.time()
+	mytimediff = endsec - startsec
+	strtime = str(mytimediff)[:4]
+	#mytimediff = mytimediff.microseconds
+	output_message = "Your search: " + query + " [" + strtime + " seconds]"
+	#output_message = mytimediff
 	return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data)
 
 
