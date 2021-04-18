@@ -94,11 +94,13 @@ def build_museum_sims_cos(num_museums, input_doc_mat, index_to_museum=index_to_m
 @irsystem.route('/', methods=['GET'])
 def search():
 	query = request.args.get('search')
-	#startsec = time.time()
 	if not query:
 		data = []
 		output_message = ''
 	else:
+		#output_message = "Your search: " + query
+		startsec = time.time()
+
 		tok_query = tokenize(query)
 		
 		l = len(museum_info)
@@ -190,12 +192,12 @@ def search():
 		del museum_info[query]
 		del museum_to_index[query]
 		del index_to_museum[l]
-	#endsec = time.time()
-	#mytimediff = endsec - startsec
-	#strtime = str(mytimediff)[:4]
-	#mytimediff = mytimediff.microseconds
-	#output_message = "Your search: " + query + " [" + strtime + " seconds]"
-	output_message = "Your search: " + query
+
+		endsec = time.time()
+		mytimediff = endsec - startsec
+		strtime = str(mytimediff)[:4]
+		output_message = "Your search: " + query + " [" + strtime + " seconds]"
+		
 	return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data)
 
 
