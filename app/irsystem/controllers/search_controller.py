@@ -58,26 +58,49 @@ index_to_museum = {v:k for k,v in museum_to_index.items()}
 # get cosine similarity
 def get_cos_sim(mus1, mus2, input_doc_mat, 
 								museum_to_index=museum_to_index):
-	cos_sim = 0
-	q_array = input_doc_mat[museum_to_index[mus1]]
-	d_array = input_doc_mat[museum_to_index[mus2]]
-
-	num = np.dot(q_array, d_array)
-	
-	denom = np.linalg.norm(q_array)  * np.linalg.norm(d_array)    
+	#cos_sim = 0
+	#q_array = input_doc_mat[museum_to_index[mus1]]
+	#d_array = input_doc_mat[museum_to_index[mus2]]
+	#
+	#num = np.dot(q_array, d_array)
+	#
+	#denom = np.linalg.norm(q_array)  * np.linalg.norm(d_array)    
 	# ADDED 1, does it affect the result?
-	cos_sim = num / (denom + 1)
-			
-	return cos_sim
+	#cos_sim = num / (denom + 1)
+	#		
+	#return cos_sim
+
+  v1 = input_doc_mat[museum_to_index[mus1]]
+  v2 = input_doc_mat[museum_to_index[mus2]]
+  vec1 = np.array(v1)
+  vec2 = np.array(v2)
+  
+  normvec1 = np.linalg.norm(vec1)
+  normvec2 = np.linalg.norm(vec2)
+  
+  n = np.dot(vec1, vec2)
+  m = np.dot(normvec1, normvec2)
+  
+  return n/(m+1)
 
 # construct cosine similarity matrix
 def build_museum_sims_cos(num_museums, input_doc_mat, index_to_museum=index_to_museum, museum_to_index=museum_to_index, input_get_sim_method=get_cos_sim):
-	sim_mat = np.zeros((num_museums, num_museums))
-	for i in (index_to_museum):
-			for j in (index_to_museum):
-					sim_mat[i][j] = input_get_sim_method(index_to_museum[i], index_to_museum[j], input_doc_mat)
-			
-	return sim_mat
+	#sim_mat = np.zeros((num_museums, num_museums))
+	#for i in (index_to_museum):
+	#		for j in (index_to_museum):
+	#				sim_mat[i][j] = input_get_sim_method(index_to_museum[i], index_to_museum[j], input_doc_mat)
+	#		
+	#return sim_mat
+
+	cosmat = np.zeros((len(input_doc_mat), len(input_doc_mat)))
+	for i in range(len(input_doc_mat)):
+		for j in range(len(input_doc_mat)):
+			if (i==j): cosmat[i][j] = 1.0
+			else:
+				mus1 = index_to_museum[i]
+				mus2 = index_to_museum[j]
+				cosmat[i][j] = input_get_sim_method(mus1, mus2, input_doc_mat, museum_to_index)
+	return cosmat
 
 # find top n museums
 def get_top_n(museum, n, cosine_mat):
@@ -185,12 +208,14 @@ def search():
 			museum_info[m] = {'ratings': ratings[m], 'tags': tags[m], 'tokenized tags': tok_tags[m], 'review titles': review_titles[m], 'review content': review_content[m], 'tokenized content': tok_review[m]}
 
 		# print(museum_info["Gettysburg Heritage Center"])
+		l = len(museum_info)
+		museum_info[query] = {'ratings': [1, 1, 1, 1, 1], 'tags': tok_query, 'tokenized tags': tok_query, 'review titles': tok_query, 'review content': tok_query, 'tokenized content': tok_query}
+		museums.append(query)
+		museum_to_index[query] = l
+		index_to_museum[l] = query
 
 		# min df originally 10
 		tfidf_vec = TfidfVectorizer(min_df = 1, max_df = 0.8, max_features = 5000, analyzer = "word", tokenizer = already_tok, preprocessor = already_tok, token_pattern=None)
-		tfidf_mat = tfidf_vec.fit_transform(museum_info[m]['tokenized tags'] for m in museums).toarray()
-
-		
 
 		# V rough algo
 		# Find the top museums based on tags and reviews
@@ -200,7 +225,7 @@ def search():
 
 
 		# tf-idf matrices
-		tfidf_mat_tags = tfidf_mat
+		tfidf_mat_tags = tfidf_vec.fit_transform(museum_info[m]['tokenized tags'] for m in museums).toarray()
 		tfidf_mat_reviews = tfidf_vec.fit_transform(museum_info[m]['tokenized content'] for m in museums).toarray()
 
 		# cosine matrices
@@ -230,6 +255,13 @@ def search():
 			top_5_museums.append(index_to_museum[i])
 
 		data = top_5_museums
+
+
+		del museums[-1]
+		del museum_info[query]
+		del museum_to_index[query]
+		del index_to_museum[l]
+
 	return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data)
 
 
