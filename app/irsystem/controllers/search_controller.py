@@ -19,7 +19,7 @@ from nltk.corpus import stopwords
 import time
 
 project_name = "Curator"
-net_id = "Madeleine Chang: mmc337, Shefali Janorkar: skj28, Esther Lee: esl86, Yvette Hung: yh387, Tiffany Zhong: tz279"
+net_id = "Madeleine Chang (mmc337), Shefali Janorkar (skj28), Esther Lee (esl86), Yvette Hung (yh387), Tiffany Zhong (tz279)"
 
 def tokenize(text):
   temp = re.split('[^a-z]', text.lower())
@@ -97,7 +97,10 @@ def search():
 	if not query:
 		data = []
 		output_message = ''
+		# use search_terms to make input sticky?
+		# search_terms = ''
 	else:
+		# search_terms = query
 		#output_message = "Your search: " + query
 		startsec = time.time()
 

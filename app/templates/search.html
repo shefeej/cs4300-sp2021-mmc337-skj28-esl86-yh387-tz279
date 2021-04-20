@@ -1,4 +1,4 @@
-<html>
+<html lang="en">
 
 <head>
     <link rel="stylesheet" href="/static/bootstrap.min.css" />
@@ -7,31 +7,34 @@
 </head>
 
 <body>
-    <!-- TODO: make footer? -->
-    <div class="topcorner">
-        <p>Project Name: {{ name }}</p>
-        <p>Student Name: ({{ netid }})</p>
-    </div>
-    <form class="form-inline global-search">
-        <h1>Curator</h1>
-        <p>Find the museum for you.</p>
+    <main>
+        <form class="form-inline global-search">
+            <h1>Curator</h1>
+            <p>Find the museum for you.</p>
 
-        <div class="form-group">
-            <!-- TODO: make search form sticky (controller needs to pass in {{query}}) & get rid of "your search" -->
-            <input id="input" type="text" name="search" class="form-control" value="{{query}}"
-                placeholder="Search for museums" />
-            <button type="submit" class="btn btn-info">Go!</button>
+            <div class="form-group">
+                <!-- TODO: make search form sticky (controller needs to pass in {{query}}) & get rid of "your search" -->
+                <input aria-label="Search" id="input" type="text" name="search" class="form-control"
+                    value="{{search_terms}}" placeholder="Search for museums" />
+                <button type="submit" class="btn btn-info">Go!</button>
+            </div>
+        </form>
+
+        <div class="search-output global-search">
+            {% if data %}
+            <h2 class="output-message">{{output_message}}</h2>
+            {% for d in data %}
+            <p class="output-result">{{d}}</p>
+            {% endfor %}
+            {% endif %}
         </div>
-    </form>
+    </main>
 
-    <form class="form-inline global-search">
-        {% if data %}
-        <h2>{{output_message}}</h2>
-        {% for d in data %}
-        <p>{{d}}</p>
-        {% endfor %}
-        {% endif %}
-    </form>
+    <footer>
+        <p>Project Name: {{ name }}</p>
+        <p>Student Names: {{ netid }}</p>
+    </footer>
+
 </body>
 
 </html>
