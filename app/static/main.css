@@ -56,13 +56,14 @@ main {
     font-size: 2em;
 }
 
-/* bad practice but just want to see if it works */
+/* keeps getting overridden by bootstrap but idk how to fix it, looks fine on localhost though;
+   already tried !important */
 footer {
-    background-color: #D3A05F !important;
-    margin: 50px 0 0 0 !important;
-    padding: 1.5em 1.5em !important;
-    font-family: "Georgia", serif !important;
-    font-size: 1.2em !important;
+    background-color: #D3A05F;
+    margin: 50px 0 0 0;
+    padding: 1.5em 1.5em;
+    font-family: "Georgia", serif;
+    font-size: 1.2em;
 }
 
 /* responsive to screen width */
