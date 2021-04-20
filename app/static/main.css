@@ -56,8 +56,6 @@ main {
     font-size: 2em;
 }
 
-/* keeps getting overridden by bootstrap but idk how to fix it, looks fine on localhost though;
-   already tried !important */
 footer {
     background-color: #D3A05F;
     margin: 50px 0 0 0;
