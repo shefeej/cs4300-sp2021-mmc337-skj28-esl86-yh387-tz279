@@ -196,7 +196,7 @@ def search():
 		endsec = time.time()
 		mytimediff = endsec - startsec
 		strtime = str(mytimediff)[:4]
-		output_message = "Your search: " + query + " [" + strtime + " seconds]"
+		output_message = "Your search: " + query + " [" + strtime + " seconds.]"
 		
 	return render_template('search.html', name=project_name, netid=net_id, output_message=output_message, data=data)
 
